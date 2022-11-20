@@ -1,6 +1,5 @@
 ---
 title: Méthodes numériques pour l'Énergétique et la Thermique
-date: 2022/2023
 author: Vincent Le Chenadec
 ---
 
