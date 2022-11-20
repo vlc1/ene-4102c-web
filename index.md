@@ -7,4 +7,5 @@ Les documents présentés en cours sont disponible [ici](https://drive.google.co
 
 # TP 1 (22/11/2022)
 
-1. [*Notebook*](notebook/cauchy.html)
+1. [*Notebook*](notebook/cauchy.html) sur le problème de Cauchy
+1. [*Notebook*](notebook/lotka-blasius.html) sur le modèle de Lotka-Volterra
