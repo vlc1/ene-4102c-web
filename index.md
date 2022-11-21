@@ -13,8 +13,8 @@ Pour celles ou ceux qui souhaite participer à distance, merci de bien vouloir u
 - *Meeting ID*: `977 6945 2745`
 - *Passcode*: `0DtwFN`
 
-Le TP couvrira les trois cahiers ci-dessous :
+L'objectif du premier TP est de se familiariser avec les schémas dits *à pas unique* pour la résolution de problèmes de Cauchy.
 
-1. [*Notebook*](notebook/algebraic.html) sur la résolution numérique de systèmes d'équations algébriques ;
-1. [*Notebook*](notebook/cauchy.html) sur le problème de Cauchy ;
-1. [*Notebook*](notebook/lotka-volterra.html) sur le modèle de Lotka-Volterra.
+1. Il a été montré en cours que la mise à jour d'une solution numérique d'un problème de Cauchy se fait à partir d'une relation de récurrence d'une suite implicite. Il faut résoudre numériquement des systèmes d'équations algébriquesnon-linéaires, ce sur quoi se concentre le [premier cahier](notebook/algebraic.html).
+1. Le [deuxième cahier](notebook/cauchy.html) présente l'implémentation d'un solveur numérique pour le problème de Cauchy non-trivial le plus simple qui soit, celui du modèle scalaire homogène linéaire et autonome de la désintégration radioactive). On explorera plusieurs notions vues en cours, à savoir la stabilité et la précision.
+1. Le [troisième et dernier cahier](notebook/lotka-volterra.html) montre enfin comment cette implémentation peut être utilisée pour la résolution de modèles plus complex, comme de Lotka-Volterra. Il explore enfin l'extension à une autre classe de schéma, celui des méthodes de Runge-Kutta.
