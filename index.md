@@ -17,4 +17,4 @@ Le TP couvrira les trois cahiers ci-dessous :
 
 1. [*Notebook*](notebook/algebraic.html) sur la résolution numérique de systèmes d'équations algébriques ;
 1. [*Notebook*](notebook/cauchy.html) sur le problème de Cauchy ;
-1. [*Notebook*](notebook/lotka-blasius.html) sur le modèle de Lotka-Volterra.
+1. [*Notebook*](notebook/lotka-volterra.html) sur le modèle de Lotka-Volterra.
