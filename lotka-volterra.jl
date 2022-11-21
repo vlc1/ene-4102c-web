@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.17.2
+# v0.19.16
 
 using Markdown
 using InteractiveUtils
@@ -14,8 +14,6 @@ md"""
 !!! warning "Remarques"
 
 	Les cellules suivantes ont été copiées du notebook précédent. Merci de ne pas les modifier.
-
-	Ce TP contient trois exercices indépendants. Cependant, dans un exercice donné, les **questions doivent être traitées séquentiellement**.
 
 """
 
@@ -48,87 +46,6 @@ function cauchy(scheme!, f, τ, s, y₀, t₀ = zero(τ))
 	T, Y
 end
 
-# ╔═╡ da87e5ef-1f16-46e8-aa15-e1a21b85c7b9
-md"""
-# Méthode de Runge-Kutta explicite
-
-La fonction `rk2` définie ci-dessous correspond à la méthode de Runge-Kutta explicite (à 2 étapes) donnée par les coefficients suivants :
-```math
-A_2 = \left ( \begin{matrix}
-0 & 0 \\
-\frac{1}{2} & 0
-\end{matrix} \right ), \quad b_2 = \left ( \begin{matrix}
-0 \\
-1
-\end{matrix} \right )
-\quad \mathrm{et}
-\quad c_2 = \left ( \begin{matrix}
-0 \\
-\frac{1}{2}
-\end{matrix} \right ).
-```
-
-"""
-
-# ╔═╡ e61c6973-177f-4885-a83c-b638a8cad271
-function rk2!(res, x, y, τ, f, t)
-	k₁ = f(t, y)
-	k₂ = f(t + τ / 2, y + τ * k₁ / 2)
-	res .= x - y - τ * k₂
-end
-
-# ╔═╡ 69538fce-c689-431f-950a-b6d5d1d7155b
-md"""
-
-1. En vous inspirant de l'exercice réalisé en TD et de la fonction `rk2` définie ci-dessus, finalisez l'implémentation `rk4` de la méthode à 4 étapes donnée par les coefficients
-```math
-A_4 = \left ( \begin{matrix}
-0 & 0 & 0 & 0 \\
-\frac{1}{2} & 0 & 0 & 0 \\
-0 & \frac{1}{2} & 0 & 0 \\
-0 & 0 & 1 & 0
-\end{matrix} \right ), \quad b_4 = \left ( \begin{matrix}
-\frac{1}{6} \\
-\frac{1}{3} \\
-\frac{1}{3} \\
-\frac{1}{6}
-\end{matrix} \right )
-\quad \mathrm{et}
-\quad c_4 = \left ( \begin{matrix}
-0 \\
-\frac{1}{2} \\
-\frac{1}{2} \\
-1
-\end{matrix} \right ),
-```
-
-"""
-
-# ╔═╡ 818dbcb1-df69-4ad5-ac31-3ad66e6d101a
-# Q1 -- À MODIFIER
-function rk4!(res, x, y, τ, f, t)
-	k₁ = f(t, y)
-	k₂ = f(t, y)
-	k₃ = f(t, y)
-	k₄ = f(t, y)
-	res .= x - y
-end
-
-# ╔═╡ 396887c8-4862-4400-9426-f34ef3b308ec
-if norm(rk4!(zeros(1), ones(1), ones(1), √2, (t, y) -> t .+ y, π) - [-14.2794]) ≤ 1e-4
-	md"""
-	!!! tip "😃 Bonne réponse"
-
-		Votre implémentation de `rk4!` est correcte.
-	"""
-else
-	md"""
-	!!! danger "😡 Mauvaise réponse"
-
-		Vérifier votre implémentation de `rk4!`.
-	"""
-end
-
 # ╔═╡ c64309e8-c39b-11eb-2841-37d321df8cd0
 md"""
 # L'équation de Lotka-Volterra
@@ -155,12 +72,12 @@ Les paramètres suivants enfin caractérisent les interactions entre les deux es
 \alpha = 0.1, \quad \beta = 0.003, \quad \gamma = 0.06, \quad \delta = 0.0012.
 ```
 
-2. Implémenter la fonction `lotka` correspondant à ce modèle.
+1. Implémenter la fonction `lotka` correspondant à ce modèle.
 
 """
 
 # ╔═╡ 06256187-e634-4410-9a14-2dd9f5194ecf
-# Q2 -- À MODIFIER
+# Q1 -- À MODIFIER
 function lotka(t, y; α = 0.1, β = 0.003, γ = 0.06, δ = 0.0012)
 	rhs = similar(y)
 	rhs[1] = -y[1]
@@ -197,130 +114,6 @@ begin
 	plot!(fig, T, last.(Y), label = "Prédateurs")
 end
 
-# ╔═╡ d9972d53-ffed-4fbc-b8ee-a80501b5bb3a
-md"""
-# Le problème de Blasius
-
-Comme vu en TD, l'équation de Blasius peut se réécrire sous la forme suivante :
-```math
-\left \{ \begin{aligned}
-\dot{y}_1 & = y_2, \\
-\dot{y}_2 & = y_3, \\
-\dot{y}_3 & = -y_1 y_3.
-\end{aligned} \right .
-```
-
-4. Finaliser l'implémentation de la fonction `blasius` ci-dessous pour qu'elle correspondre au second membre du système décrit ci-dessus.
-
-"""
-
-# ╔═╡ 6d558f15-1ffa-4524-a29a-6e12caf5400e
-# Q4 -- À MODIFIER
-function blasius(t, y)
-	rhs = similar(y)
-	rhs[1] = -y[1]
-	rhs[2] = -y[2]
-	rhs[3] = -y[3]
-	rhs
-end
-
-# ╔═╡ 4bf1aea3-8fd7-44c6-92fb-fe649350e3f8
-if norm(blasius(nothing, [√2; 1/3; π]) - [0.333333; 3.14159; -4.44288]) ≤ 1e-4
-	md"""
-	!!! tip "😃 Bonne réponse"
-
-		Votre implémentation de `blasius` est correcte.
-	"""
-else
-	md"""
-	!!! danger "😡 Mauvaise réponse"
-
-		Vérifier votre implémentation de `blasius`.
-	"""
-end
-
-# ╔═╡ 5700a08d-4cab-42fd-bc38-f75633c2051a
-md"""
-La symétrie identifiée en TD peut être exploitée en résolvant dans un premier temps cette équation avec la condition initiale
-```math
-\left \{ \begin{aligned}
-u_1 \left ( 0 \right ) & = 0, \\
-u_2 \left ( 0 \right ) & = 0, \\
-u_3 \left ( 0 \right ) & = 1.
-\end{aligned} \right .
-```
-
-On a vu en TD que le paramètre ``\alpha \equiv u_2 \left (\infty \right )`` permet de calculer la fonction de Blasius à partir de la solution du problème de Cauchy présenté ci-dessus.
-
-5. Implémenter la fonction `alpha` ci-dessous qui, étant donnés un schéma numérique, un pas de temps `τ` et un horizon temporel `s`, retourne ``\alpha``.
-
-"""
-
-# ╔═╡ 6f3aa892-c589-45ee-a4e8-56f66e471219
-# Q5 -- À MODIFIER
-function alpha(scheme!, τ, s)
-	one(τ)
-end
-
-# ╔═╡ d713869e-d1ba-43c1-b924-e68e0e67015a
-if abs(alpha(midpoint!, 0.1, 1000.) - 1.6537) ≤ 1e-4
-	md"""
-	!!! tip "😃 Bonne réponse"
-
-		Votre implémentation de `alpha` est correcte.
-	"""
-else
-	md"""
-	!!! danger "😡 Mauvaise réponse"
-
-		Vérifier votre implémentation de `alpha`.
-	"""
-end
-
-# ╔═╡ c5b7bb06-b553-426f-bd23-afcc9bf0f476
-md"""
-6. Pour le schéma de votre choix, assurez-vous que votre choix de ``\tau`` et ``s`` garantisse au moins 4 chiffres significatifs de ``\alpha`` en remplissant **quelques cellules** du tableau suivant.
-
-|   ``\alpha``    | ``s = 10`` | ``s = 100`` | ``s = 1000`` | ``s = 10000`` |
-|:---------------:|:----------:|:-----------:|:------------:|:-------------:|
-| ``\tau = 0.01`` |            |             |              |               |
-| ``\tau = 0.1``  |            |             |              |               |
-| ``\tau = 1.0``  |            |             |              |               |
-
-7. Définissez la fonction de Blasius (`solution`).
-
-"""
-
-# ╔═╡ cdf255c7-494d-41b6-9328-0e040b83fde0
-# Q7 -- À MODIFIER
-function solution(x; scheme! = midpoint!, τ = 0.1, s = 1000.)
-	zero(τ)
-end
-
-# ╔═╡ c293dd14-ca7c-4a08-885f-c1adb19fbe6e
-if abs(solution(1.0) - 0.382) ≤ 1e-3
-	md"""
-	!!! tip "😃 Bonne réponse"
-
-		Votre implémentation de `solution` est correcte.
-	"""
-else
-	md"""
-	!!! danger "😡 Mauvaise réponse"
-
-		Vérifier votre implémentation de `solution`.
-	"""
-end
-
-# ╔═╡ db09724a-c5e4-4486-a8a7-196c8afea296
-md"""
-8. Commenter l'allure du graphe suivant.
-
-"""
-
-# ╔═╡ 71ca93bd-debc-449f-aba5-71585ea771fe
-plot(0:0.1:3.0, solution.(0:0.1:3.0), label = "Blasius")
-
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
@@ -337,8 +130,9 @@ Plots = "~1.24.3"
 PLUTO_MANIFEST_TOML_CONTENTS = """
 # This file is machine-generated - editing it directly is not advised
 
-julia_version = "1.7.0-rc3"
+julia_version = "1.8.3"
 manifest_format = "2.0"
+project_hash = "d2dfdae085dd52d09c72516be0d3b84b7aedccf6"
 
 [[deps.Adapt]]
 deps = ["LinearAlgebra"]
@@ -348,6 +142,7 @@ version = "3.3.1"
 
 [[deps.ArgTools]]
 uuid = "0dad84c5-d112-42e6-8d28-ef12dabb789f"
+version = "1.1.1"
 
 [[deps.ArrayInterface]]
 deps = ["Compat", "IfElse", "LinearAlgebra", "Requires", "SparseArrays", "Static"]
@@ -369,9 +164,9 @@ version = "1.0.8+0"
 
 [[deps.Cairo_jll]]
 deps = ["Artifacts", "Bzip2_jll", "Fontconfig_jll", "FreeType2_jll", "Glib_jll", "JLLWrappers", "LZO_jll", "Libdl", "Pixman_jll", "Pkg", "Xorg_libXext_jll", "Xorg_libXrender_jll", "Zlib_jll", "libpng_jll"]
-git-tree-sha1 = "f2202b55d816427cd385a9a4f3ffb226bee80f99"
+git-tree-sha1 = "4b859a208b2397a7a623a03449e4636bdb17bcf2"
 uuid = "83423d85-b0ee-5818-9007-b63ccbeb887a"
-version = "1.16.1+0"
+version = "1.16.1+1"
 
 [[deps.ChainRulesCore]]
 deps = ["Compat", "LinearAlgebra", "SparseArrays"]
@@ -418,6 +213,7 @@ version = "3.40.0"
 [[deps.CompilerSupportLibraries_jll]]
 deps = ["Artifacts", "Libdl"]
 uuid = "e66e0078-7015-5450-92f7-15fbd957f2ae"
+version = "0.5.2+0"
 
 [[deps.Contour]]
 deps = ["StaticArrays"]
@@ -478,8 +274,9 @@ uuid = "ffbed154-4ef7-542d-bbb7-c09d3a79fcae"
 version = "0.8.6"
 
 [[deps.Downloads]]
-deps = ["ArgTools", "LibCURL", "NetworkOptions"]
+deps = ["ArgTools", "FileWatching", "LibCURL", "NetworkOptions"]
 uuid = "f43a241f-c20a-4ad4-852c-f6b1247861c6"
+version = "1.6.0"
 
 [[deps.EarCut_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -504,6 +301,9 @@ deps = ["Artifacts", "Bzip2_jll", "FreeType2_jll", "FriBidi_jll", "JLLWrappers",
 git-tree-sha1 = "d8a578692e3077ac998b50c0217dfd67f21d1e5f"
 uuid = "b22a6f82-2f65-5046-a5b2-351ab43fb4e5"
 version = "4.4.0+0"
+
+[[deps.FileWatching]]
+uuid = "7b1f6079-737a-58dc-b8bc-7a2ca5c1b5ee"
 
 [[deps.FiniteDiff]]
 deps = ["ArrayInterface", "LinearAlgebra", "Requires", "SparseArrays", "StaticArrays"]
@@ -579,9 +379,9 @@ version = "0.21.0+0"
 
 [[deps.Glib_jll]]
 deps = ["Artifacts", "Gettext_jll", "JLLWrappers", "Libdl", "Libffi_jll", "Libiconv_jll", "Libmount_jll", "PCRE_jll", "Pkg", "Zlib_jll"]
-git-tree-sha1 = "7bf67e9a481712b3dbe9cb3dac852dc4b1162e02"
+git-tree-sha1 = "a32d672ac2c967f3deb8a81d828afc739c838a06"
 uuid = "7746bdde-850d-59dc-9ae8-88ece973131d"
-version = "2.68.3+0"
+version = "2.68.3+2"
 
 [[deps.Graphite2_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -602,9 +402,9 @@ version = "0.9.17"
 
 [[deps.HarfBuzz_jll]]
 deps = ["Artifacts", "Cairo_jll", "Fontconfig_jll", "FreeType2_jll", "Glib_jll", "Graphite2_jll", "JLLWrappers", "Libdl", "Libffi_jll", "Pkg"]
-git-tree-sha1 = "8a954fed8ac097d5be04921d595f741115c1b2ad"
+git-tree-sha1 = "129acf094d168394e80ee1dc4bc06ec835e510a3"
 uuid = "2e76f6c2-a576-52d4-95c1-20adfe4de566"
-version = "2.8.1+0"
+version = "2.8.1+1"
 
 [[deps.IfElse]]
 git-tree-sha1 = "debdd00ffef04665ccbb3e150747a77560e8fad1"
@@ -666,6 +466,12 @@ git-tree-sha1 = "f6250b16881adf048549549fba48b1161acdac8c"
 uuid = "c1c5ebd0-6772-5130-a774-d5fcae4a789d"
 version = "3.100.1+0"
 
+[[deps.LERC_jll]]
+deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
+git-tree-sha1 = "bf36f528eec6634efc60d7ec062008f171071434"
+uuid = "88015f11-f218-50d7-93a8-a6af411a945d"
+version = "3.0.0+1"
+
 [[deps.LZO_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
 git-tree-sha1 = "e5b909bcf985c5e2605737d2ce278ed791b89be6"
@@ -686,10 +492,12 @@ version = "0.15.9"
 [[deps.LibCURL]]
 deps = ["LibCURL_jll", "MozillaCACerts_jll"]
 uuid = "b27032c2-a3e7-50c8-80cd-2d36dbcbfd21"
+version = "0.6.3"
 
 [[deps.LibCURL_jll]]
 deps = ["Artifacts", "LibSSH2_jll", "Libdl", "MbedTLS_jll", "Zlib_jll", "nghttp2_jll"]
 uuid = "deac9b47-8bc7-5906-a0fe-35ac56dc84c0"
+version = "7.84.0+0"
 
 [[deps.LibGit2]]
 deps = ["Base64", "NetworkOptions", "Printf", "SHA"]
@@ -698,6 +506,7 @@ uuid = "76f85450-5226-5b5a-8eaa-529ad045b433"
 [[deps.LibSSH2_jll]]
 deps = ["Artifacts", "Libdl", "MbedTLS_jll"]
 uuid = "29816b5a-b9ab-546f-933c-edad1886dfa8"
+version = "1.10.2+0"
 
 [[deps.Libdl]]
 uuid = "8f399da3-3557-5675-b5ff-fb832c97cbdb"
@@ -739,10 +548,10 @@ uuid = "4b2f31a3-9ecc-558c-b454-b3730dcb73e9"
 version = "2.35.0+0"
 
 [[deps.Libtiff_jll]]
-deps = ["Artifacts", "JLLWrappers", "JpegTurbo_jll", "Libdl", "Pkg", "Zlib_jll", "Zstd_jll"]
-git-tree-sha1 = "340e257aada13f95f98ee352d316c3bed37c8ab9"
+deps = ["Artifacts", "JLLWrappers", "JpegTurbo_jll", "LERC_jll", "Libdl", "Pkg", "Zlib_jll", "Zstd_jll"]
+git-tree-sha1 = "c9551dd26e31ab17b86cbd00c2ede019c08758eb"
 uuid = "89763e89-9b03-5906-acba-b20f662cd828"
-version = "4.3.0+0"
+version = "4.3.0+1"
 
 [[deps.Libuuid_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -788,6 +597,7 @@ version = "1.0.3"
 [[deps.MbedTLS_jll]]
 deps = ["Artifacts", "Libdl"]
 uuid = "c8ffd9c3-330d-5841-b78e-0817d7145fa1"
+version = "2.28.0+0"
 
 [[deps.Measures]]
 git-tree-sha1 = "e498ddeee6f9fdb4551ce855a46f54dbd900245f"
@@ -805,6 +615,7 @@ uuid = "a63ad114-7e13-5084-954f-fe012c677804"
 
 [[deps.MozillaCACerts_jll]]
 uuid = "14a3606d-f60d-562e-9121-12d972cd8159"
+version = "2022.2.1"
 
 [[deps.NLSolversBase]]
 deps = ["DiffResults", "Distributed", "FiniteDiff", "ForwardDiff"]
@@ -825,20 +636,23 @@ version = "0.3.5"
 
 [[deps.NetworkOptions]]
 uuid = "ca575930-c2e3-43a9-ace4-1e988b2c1908"
+version = "1.2.0"
 
 [[deps.Ogg_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
-git-tree-sha1 = "7937eda4681660b4d6aeeecc2f7e1c81c8ee4e2f"
+git-tree-sha1 = "887579a3eb005446d514ab7aeac5d1d027658b8f"
 uuid = "e7412a2a-1a6e-54c0-be00-318e2571c051"
-version = "1.3.5+0"
+version = "1.3.5+1"
 
 [[deps.OpenBLAS_jll]]
 deps = ["Artifacts", "CompilerSupportLibraries_jll", "Libdl"]
 uuid = "4536629a-c528-5b80-bd46-f80d51c5b363"
+version = "0.3.20+0"
 
 [[deps.OpenLibm_jll]]
 deps = ["Artifacts", "Libdl"]
 uuid = "05823500-19ac-5b8b-9628-191a04bc5112"
+version = "0.8.1+0"
 
 [[deps.OpenSSL_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -890,6 +704,7 @@ version = "0.40.1+0"
 [[deps.Pkg]]
 deps = ["Artifacts", "Dates", "Downloads", "LibGit2", "Libdl", "Logging", "Markdown", "Printf", "REPL", "Random", "SHA", "Serialization", "TOML", "Tar", "UUIDs", "p7zip_jll"]
 uuid = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
+version = "1.8.0"
 
 [[deps.PlotThemes]]
 deps = ["PlotUtils", "Requires", "Statistics"]
@@ -921,9 +736,9 @@ uuid = "de0858da-6303-5e67-8744-51eddeeeb8d7"
 
 [[deps.Qt5Base_jll]]
 deps = ["Artifacts", "CompilerSupportLibraries_jll", "Fontconfig_jll", "Glib_jll", "JLLWrappers", "Libdl", "Libglvnd_jll", "OpenSSL_jll", "Pkg", "Xorg_libXext_jll", "Xorg_libxcb_jll", "Xorg_xcb_util_image_jll", "Xorg_xcb_util_keysyms_jll", "Xorg_xcb_util_renderutil_jll", "Xorg_xcb_util_wm_jll", "Zlib_jll", "xkbcommon_jll"]
-git-tree-sha1 = "ad368663a5e20dbb8d6dc2fddeefe4dae0781ae8"
+git-tree-sha1 = "0c03844e2231e12fda4d0086fd7cbe4098ee8dc5"
 uuid = "ea2cea3b-5b76-57ae-a6ef-0a8af62496e1"
-version = "5.15.3+0"
+version = "5.15.3+2"
 
 [[deps.REPL]]
 deps = ["InteractiveUtils", "Markdown", "Sockets", "Unicode"]
@@ -957,6 +772,7 @@ version = "1.1.3"
 
 [[deps.SHA]]
 uuid = "ea8e919c-243c-51af-8825-aaa63cd721ce"
+version = "0.7.0"
 
 [[deps.Scratch]]
 deps = ["Dates"]
@@ -1032,6 +848,7 @@ version = "0.6.3"
 [[deps.TOML]]
 deps = ["Dates"]
 uuid = "fa267f1f-6049-4f14-aa54-33bafae1ed76"
+version = "1.0.0"
 
 [[deps.TableTraits]]
 deps = ["IteratorInterfaceExtensions"]
@@ -1048,6 +865,7 @@ version = "1.6.0"
 [[deps.Tar]]
 deps = ["ArgTools", "SHA"]
 uuid = "a4e569a6-e804-4fa4-b0f3-eef7a1d5b13e"
+version = "1.10.1"
 
 [[deps.Test]]
 deps = ["InteractiveUtils", "Logging", "Random", "Serialization"]
@@ -1229,6 +1047,7 @@ version = "1.4.0+3"
 [[deps.Zlib_jll]]
 deps = ["Libdl"]
 uuid = "83775a58-1f1d-513f-b197-d71354ab007a"
+version = "1.2.12+3"
 
 [[deps.Zstd_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -1245,6 +1064,7 @@ version = "0.15.1+0"
 [[deps.libblastrampoline_jll]]
 deps = ["Artifacts", "Libdl", "OpenBLAS_jll"]
 uuid = "8e850b90-86db-534c-a0d3-1478176c7d93"
+version = "5.1.1+0"
 
 [[deps.libfdk_aac_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -1260,17 +1080,19 @@ version = "1.6.38+0"
 
 [[deps.libvorbis_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Ogg_jll", "Pkg"]
-git-tree-sha1 = "c45f4e40e7aafe9d086379e5578947ec8b95a8fb"
+git-tree-sha1 = "b910cb81ef3fe6e78bf6acee440bda86fd6ae00c"
 uuid = "f27f6e37-5d2b-51aa-960f-b287f2bc3b7a"
-version = "1.3.7+0"
+version = "1.3.7+1"
 
 [[deps.nghttp2_jll]]
 deps = ["Artifacts", "Libdl"]
 uuid = "8e850ede-7688-5339-a07c-302acd2aaf8d"
+version = "1.48.0+0"
 
 [[deps.p7zip_jll]]
 deps = ["Artifacts", "Libdl"]
 uuid = "3f19e933-33d8-53b3-aaab-bd5110c3b7a0"
+version = "17.4.0+0"
 
 [[deps.x264_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -1298,26 +1120,10 @@ version = "0.9.1+5"
 # ╠═bf92265c-377a-49b3-8715-25e9d0dbda28
 # ╠═5016a984-930e-452a-ad9c-fedd124610e3
 # ╠═bb5e9ba4-45e2-4910-a446-22aab6ee2f75
-# ╟─da87e5ef-1f16-46e8-aa15-e1a21b85c7b9
-# ╠═e61c6973-177f-4885-a83c-b638a8cad271
-# ╟─69538fce-c689-431f-950a-b6d5d1d7155b
-# ╠═818dbcb1-df69-4ad5-ac31-3ad66e6d101a
-# ╟─396887c8-4862-4400-9426-f34ef3b308ec
 # ╟─c64309e8-c39b-11eb-2841-37d321df8cd0
 # ╠═06256187-e634-4410-9a14-2dd9f5194ecf
 # ╟─77343961-9f9f-4f51-a6cc-88c31cd68203
 # ╟─08fc9e11-ec90-4521-b305-08d2bbeb83cd
 # ╠═ad08bb68-0e9e-4a39-b84a-ed41392dd425
-# ╟─d9972d53-ffed-4fbc-b8ee-a80501b5bb3a
-# ╠═6d558f15-1ffa-4524-a29a-6e12caf5400e
-# ╟─4bf1aea3-8fd7-44c6-92fb-fe649350e3f8
-# ╟─5700a08d-4cab-42fd-bc38-f75633c2051a
-# ╠═6f3aa892-c589-45ee-a4e8-56f66e471219
-# ╟─d713869e-d1ba-43c1-b924-e68e0e67015a
-# ╟─c5b7bb06-b553-426f-bd23-afcc9bf0f476
-# ╠═cdf255c7-494d-41b6-9328-0e040b83fde0
-# ╟─c293dd14-ca7c-4a08-885f-c1adb19fbe6e
-# ╟─db09724a-c5e4-4486-a8a7-196c8afea296
-# ╠═71ca93bd-debc-449f-aba5-71585ea771fe
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002

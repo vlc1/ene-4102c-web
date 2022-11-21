@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.17.2
+# v0.19.16
 
 using Markdown
 using InteractiveUtils
@@ -17,7 +17,7 @@ md"""
 
 Quelques points vont être abordés en début de séance :
 
-1. Une bibliothèque: `Plots` (et celle vue à la séance précédante, `NLsolve`) ;
+1. Une bibliothèque: `Plots` (et celle vue dans le *notebook* précédent, `NLsolve`) ;
 1. Fonctions et types d'arguments ;
 1. La notation `.` (*broadcast*) ;
 1. Premier (`first`) et dernier (`last`) éléments d'un tableau.
@@ -43,29 +43,9 @@ de la solution numérique du problème de Cauchy
 u \left ( 0 \right ) & = u _ 0
 \end{aligned} \right .
 ```
-sont définis implicitement, c'est à dire comme racines d'équations algébriques. On a également vu que ces équations peuvent être résolues numériquement grâce à la bibliothèque `NLsolve`.
-
-1. Dans le cas du modèle du pendule simple, modifier les cellules suivantes afin de mettre à jour la solution par le schéma du point milieu en prenant ``\omega = 1``, ``\tau = 0.1`` et ``u _ 0 = \left ( \pi / 4, 0 \right )``.
+sont définis implicitement, c'est à dire comme racines d'équations algébriques. On a également vu dans le *notebook* précédent comme résoudre ces équations grâce à la bibliothèque `NLsolve`.
 
 """
-
-# ╔═╡ 88dd8a5e-651a-4939-9231-6696b78f024c
-function example!(res, x)
-    res[1] = (x[1] + 3) * (x[2] ^ 3 - 7) + 18
-    res[2] = sin(x[2] * exp(x[1]) - 1)
-	nothing
-end
-
-# ╔═╡ 7dccedba-aa05-4821-b1ed-ed873ad9cccb
-getproperty(nlsolve(example!, [0.1; 1.2]), :zero)
-
-# ╔═╡ bea20ce9-88ff-45e4-bb5a-494c4d2d19c2
-# Q1 -- À MODIFIER
-function pendulum!(res, x)
-    res[1] = x[1]
-    res[2] = x[2]
-	nothing
-end
 
 # ╔═╡ 7dc345ee-f7ec-11ea-138f-a1c6b81e0260
 md"""
@@ -88,12 +68,12 @@ et la solution exacte est donnée sous la forme :
 u \colon t \mapsto \exp \left ( \lambda t \right ) u_0.
 ```
 
-2. Implémenter la fonction ``f``, appelée ci-dessous `linear`, dans le cas ``\lambda = -1``.
+1. Implémenter la fonction ``f``, appelée ci-dessous `linear`, dans le cas ``\lambda = -1``.
 
 """
 
 # ╔═╡ 58162516-f7ec-11ea-3095-85bde6d71604
-# Q2 -- À MODIFIER
+# Q1 -- À MODIFIER
 linear(t, u) = zero(u)
 
 # ╔═╡ dcf06721-1996-42ce-8c77-93f6f5195c7d
@@ -113,12 +93,12 @@ end
 
 # ╔═╡ 56b5b3ec-7ec2-483c-8120-156665b2c49f
 md"""
-3. Implémenter la fonction `solution` qui correspond à la solution analytique dans le cas ``\lambda = -1`` et ``u_0 = 1``.
+2. Implémenter la fonction `solution` qui correspond à la solution analytique dans le cas ``\lambda = -1`` et ``u_0 = 1``.
 
 """
 
 # ╔═╡ 3ab81476-f7f8-11ea-3633-09930c9cdffe
-# Q3 -- À MODIFIER
+# Q2 -- À MODIFIER
 solution(t, u = ones(1)) = zero(u)
 
 # ╔═╡ 2f1bd88d-9d9c-4fd6-aef5-5d061994759f
@@ -181,7 +161,7 @@ end
 
 # ╔═╡ 036e58db-9f98-4e42-ba1f-b66344db6ae7
 md"""
-4. Modifier la fonction `implicit!` ci-dessous pour qu'elle corresponde au schéma d'Euler implicite
+3. Modifier la fonction `implicit!` ci-dessous pour qu'elle corresponde au schéma d'Euler implicite
 ```math
 F \left ( x, y, \tau, f, t \right ) = x - y - \tau f \left ( t + \tau, x \right ).
 ```
@@ -189,7 +169,7 @@ F \left ( x, y, \tau, f, t \right ) = x - y - \tau f \left ( t + \tau, x \right 
 """
 
 # ╔═╡ ba074cc6-64cb-4f0a-9996-e6306727663c
-# Q4 -- À MODIFIER
+# Q3 -- À MODIFIER
 function implicit!(res, x, y, τ, f, t)
 	res .= x - y - τ * f(t, y)
 end
@@ -211,7 +191,7 @@ end
 
 # ╔═╡ 9638da35-a6bc-4771-806e-7ad356fe5297
 md"""
-5. De même, modifier la fonction `midpoint!` ci-dessous pour lui faire correspondre le schéma du point milieu, qui s'écrira
+4. De même, modifier la fonction `midpoint!` ci-dessous pour lui faire correspondre le schéma du point milieu, qui s'écrira
 ```math
 F \left ( x, y, \tau, f, t \right ) = x - y - \tau f \left ( t + \frac{\tau}{2}, \frac{x + y}{2} \right ).
 ```
@@ -219,7 +199,7 @@ F \left ( x, y, \tau, f, t \right ) = x - y - \tau f \left ( t + \frac{\tau}{2},
 """
 
 # ╔═╡ ec517a8d-bdef-41e0-bb4e-fac9df1f3c24
-# Q5 -- À MODIFIER
+# Q4 -- À MODIFIER
 function midpoint!(res, x, y, τ, f, t)
 	res .= x - y - τ * f(t, y)
 end
@@ -297,7 +277,7 @@ end
 
 # ╔═╡ 6be4f6f8-58e3-4e23-b34e-514e1045d08e
 md"""
-6. Utiliser les fonctions `linear` et `solution` définie précédemment dans l'implémentation de la fonction `error` ci-dessous, qui calcule l'erreur
+5. Utiliser les fonctions `linear` et `solution` définie précédemment dans l'implémentation de la fonction `error` ci-dessous, qui calcule l'erreur
 ```math
 y_N - y \left ( t_N \right )
 ```
@@ -306,7 +286,7 @@ en fonction du schéma (`scheme!`) et du pas en temps (`τ`).
 """
 
 # ╔═╡ 7fafbd51-99a9-4fea-bebf-6160e62a3ef4
-# Q6 -- À MODIFIER
+# Q5 -- À MODIFIER
 function error(scheme!, τ, s)
 	T, num = cauchy(scheme!, linear, τ, s, ones(1))
 	exact = solution.(T)
@@ -330,7 +310,7 @@ end
 
 # ╔═╡ d764d914-7a16-434a-8954-1f7233ee601c
 md"""
-7. Calculer (en utilisant la fonction `error`) et reporter les erreurs à l'instant `s = 1.0` dans le tableau ci-dessous. Commenter.
+6. Calculer (en utilisant la fonction `error`) et reporter les erreurs à l'instant `s = 1.0` dans le tableau ci-dessous. Commenter.
 
 |             | `explicit!` | `implicit!` | `midpoint!` |
 |:-----------:|:-----------:|:-----------:|:-----------:|
@@ -339,62 +319,13 @@ md"""
 | `τ = 0.5`   |             |             |             |
 | `τ = 1.0`   |             |             |             |
 
-8. On se place maintenant sur un horizon temporel plus long (`s = 10.0`). Augmenter la taille du pas de temps et commenter.
-
-"""
-
-# ╔═╡ d4637d80-f8c1-11ea-1f7f-df462373ca2d
-md"""
-
-Tout l'intérêt de l'utilisation du package `NLsolve.jl` est que notre implémentation fonctionne pour les problèmes scalaires **non-linéaires**, ainsi que pour les cas **vectoriels**.
-
-# Au delà du cas linéaire
-
-9. Utiliser ou imaginer un modèle scalaire non-linéaire en modifier la fonction `nonlinear` ci-dessous, et visualiser votre solution numérique pour chacun des trois schémas sur le même graphique. Vous pourrez par exemple utiliser la question 3 de l'exercice vu en TD :
+7. On peut estimer l'ordre d'une méthode, c'est à dire la vitesse à laquelle la solution converge, à partir de la formule
 ```math
-f \colon \left ( t, y \right ) \mapsto 2t - y ^ 2.
+p = \frac{\log \left ( \varepsilon _ {2\tau} / \varepsilon _ \tau \right )}{\log \left ( 2 \right )}
 ```
-
-!!! note "De l'usage du point"
-
-	En Julia, le point (`.`) permet d'appliquer une fonction à chaque élément d'un tableau. Par exemple, la commande suivante élève chaque élément du tableau `y` au carré :
-	```julia
-	y .^ 2
-	```
-
-	Dans le doute, on peut aussi utiliser la *macro* `@.` comme suit :
-	```julia
-	@. y ^ 2
-	```
-    En un sens, elle "saupoudre" l'expression qui la suit de points.
+où ``\varepsilon _ \tau`` dénote l'erreur obtenue avec un pas en temps égal à ``\tau``. Utiliser cette formule pour estimer l'ordre de chacun des schémas utilisés.
 
 """
-
-# ╔═╡ 91a712b2-f8bd-11ea-3b8c-1bfbd521d29a
-# Q9 -- À MODIFIER
-nonlinear(t, y) = @. y
-
-# ╔═╡ e202c9cd-6603-4c73-9a4d-565cf0de7247
-if norm(nonlinear(π, [√2]) - [4.28319]) ≤ 1e-4
-	md"""
-	!!! tip "😃 Bonne réponse"
-
-		Votre implémentation de `nonlinear` est correcte.
-	"""
-else
-	md"""
-	!!! danger "😡 Mauvaise réponse"
-
-		Vérifier votre implémentation de `nonlinear`.
-	"""
-end
-
-# ╔═╡ 580e8356-4fd2-47e1-a5a4-7063998b4ecb
-begin
-	local T, Y = cauchy(explicit!, nonlinear, 0.1, 1.0, ones(1))
-	local fig = plot()
-	scatter!(fig, T, first.(Y), label = "num")
-end
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
@@ -420,6 +351,7 @@ version = "3.3.1"
 
 [[ArgTools]]
 uuid = "0dad84c5-d112-42e6-8d28-ef12dabb789f"
+version = "1.1.1"
 
 [[ArrayInterface]]
 deps = ["Compat", "IfElse", "LinearAlgebra", "Requires", "SparseArrays", "Static"]
@@ -441,9 +373,9 @@ version = "1.0.8+0"
 
 [[Cairo_jll]]
 deps = ["Artifacts", "Bzip2_jll", "Fontconfig_jll", "FreeType2_jll", "Glib_jll", "JLLWrappers", "LZO_jll", "Libdl", "Pixman_jll", "Pkg", "Xorg_libXext_jll", "Xorg_libXrender_jll", "Zlib_jll", "libpng_jll"]
-git-tree-sha1 = "f2202b55d816427cd385a9a4f3ffb226bee80f99"
+git-tree-sha1 = "4b859a208b2397a7a623a03449e4636bdb17bcf2"
 uuid = "83423d85-b0ee-5818-9007-b63ccbeb887a"
-version = "1.16.1+0"
+version = "1.16.1+1"
 
 [[ChainRulesCore]]
 deps = ["Compat", "LinearAlgebra", "SparseArrays"]
@@ -490,6 +422,7 @@ version = "3.40.0"
 [[CompilerSupportLibraries_jll]]
 deps = ["Artifacts", "Libdl"]
 uuid = "e66e0078-7015-5450-92f7-15fbd957f2ae"
+version = "0.5.2+0"
 
 [[Contour]]
 deps = ["StaticArrays"]
@@ -550,8 +483,9 @@ uuid = "ffbed154-4ef7-542d-bbb7-c09d3a79fcae"
 version = "0.8.6"
 
 [[Downloads]]
-deps = ["ArgTools", "LibCURL", "NetworkOptions"]
+deps = ["ArgTools", "FileWatching", "LibCURL", "NetworkOptions"]
 uuid = "f43a241f-c20a-4ad4-852c-f6b1247861c6"
+version = "1.6.0"
 
 [[EarCut_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -576,6 +510,9 @@ deps = ["Artifacts", "Bzip2_jll", "FreeType2_jll", "FriBidi_jll", "JLLWrappers",
 git-tree-sha1 = "d8a578692e3077ac998b50c0217dfd67f21d1e5f"
 uuid = "b22a6f82-2f65-5046-a5b2-351ab43fb4e5"
 version = "4.4.0+0"
+
+[[FileWatching]]
+uuid = "7b1f6079-737a-58dc-b8bc-7a2ca5c1b5ee"
 
 [[FiniteDiff]]
 deps = ["ArrayInterface", "LinearAlgebra", "Requires", "SparseArrays", "StaticArrays"]
@@ -651,9 +588,9 @@ version = "0.21.0+0"
 
 [[Glib_jll]]
 deps = ["Artifacts", "Gettext_jll", "JLLWrappers", "Libdl", "Libffi_jll", "Libiconv_jll", "Libmount_jll", "PCRE_jll", "Pkg", "Zlib_jll"]
-git-tree-sha1 = "7bf67e9a481712b3dbe9cb3dac852dc4b1162e02"
+git-tree-sha1 = "a32d672ac2c967f3deb8a81d828afc739c838a06"
 uuid = "7746bdde-850d-59dc-9ae8-88ece973131d"
-version = "2.68.3+0"
+version = "2.68.3+2"
 
 [[Graphite2_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -674,9 +611,9 @@ version = "0.9.17"
 
 [[HarfBuzz_jll]]
 deps = ["Artifacts", "Cairo_jll", "Fontconfig_jll", "FreeType2_jll", "Glib_jll", "Graphite2_jll", "JLLWrappers", "Libdl", "Libffi_jll", "Pkg"]
-git-tree-sha1 = "8a954fed8ac097d5be04921d595f741115c1b2ad"
+git-tree-sha1 = "129acf094d168394e80ee1dc4bc06ec835e510a3"
 uuid = "2e76f6c2-a576-52d4-95c1-20adfe4de566"
-version = "2.8.1+0"
+version = "2.8.1+1"
 
 [[IfElse]]
 git-tree-sha1 = "debdd00ffef04665ccbb3e150747a77560e8fad1"
@@ -738,6 +675,12 @@ git-tree-sha1 = "f6250b16881adf048549549fba48b1161acdac8c"
 uuid = "c1c5ebd0-6772-5130-a774-d5fcae4a789d"
 version = "3.100.1+0"
 
+[[LERC_jll]]
+deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
+git-tree-sha1 = "bf36f528eec6634efc60d7ec062008f171071434"
+uuid = "88015f11-f218-50d7-93a8-a6af411a945d"
+version = "3.0.0+1"
+
 [[LZO_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
 git-tree-sha1 = "e5b909bcf985c5e2605737d2ce278ed791b89be6"
@@ -758,10 +701,12 @@ version = "0.15.9"
 [[LibCURL]]
 deps = ["LibCURL_jll", "MozillaCACerts_jll"]
 uuid = "b27032c2-a3e7-50c8-80cd-2d36dbcbfd21"
+version = "0.6.3"
 
 [[LibCURL_jll]]
 deps = ["Artifacts", "LibSSH2_jll", "Libdl", "MbedTLS_jll", "Zlib_jll", "nghttp2_jll"]
 uuid = "deac9b47-8bc7-5906-a0fe-35ac56dc84c0"
+version = "7.84.0+0"
 
 [[LibGit2]]
 deps = ["Base64", "NetworkOptions", "Printf", "SHA"]
@@ -770,6 +715,7 @@ uuid = "76f85450-5226-5b5a-8eaa-529ad045b433"
 [[LibSSH2_jll]]
 deps = ["Artifacts", "Libdl", "MbedTLS_jll"]
 uuid = "29816b5a-b9ab-546f-933c-edad1886dfa8"
+version = "1.10.2+0"
 
 [[Libdl]]
 uuid = "8f399da3-3557-5675-b5ff-fb832c97cbdb"
@@ -811,10 +757,10 @@ uuid = "4b2f31a3-9ecc-558c-b454-b3730dcb73e9"
 version = "2.35.0+0"
 
 [[Libtiff_jll]]
-deps = ["Artifacts", "JLLWrappers", "JpegTurbo_jll", "Libdl", "Pkg", "Zlib_jll", "Zstd_jll"]
-git-tree-sha1 = "340e257aada13f95f98ee352d316c3bed37c8ab9"
+deps = ["Artifacts", "JLLWrappers", "JpegTurbo_jll", "LERC_jll", "Libdl", "Pkg", "Zlib_jll", "Zstd_jll"]
+git-tree-sha1 = "c9551dd26e31ab17b86cbd00c2ede019c08758eb"
 uuid = "89763e89-9b03-5906-acba-b20f662cd828"
-version = "4.3.0+0"
+version = "4.3.0+1"
 
 [[Libuuid_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -860,6 +806,7 @@ version = "1.0.3"
 [[MbedTLS_jll]]
 deps = ["Artifacts", "Libdl"]
 uuid = "c8ffd9c3-330d-5841-b78e-0817d7145fa1"
+version = "2.28.0+0"
 
 [[Measures]]
 git-tree-sha1 = "e498ddeee6f9fdb4551ce855a46f54dbd900245f"
@@ -877,6 +824,7 @@ uuid = "a63ad114-7e13-5084-954f-fe012c677804"
 
 [[MozillaCACerts_jll]]
 uuid = "14a3606d-f60d-562e-9121-12d972cd8159"
+version = "2022.2.1"
 
 [[NLSolversBase]]
 deps = ["DiffResults", "Distributed", "FiniteDiff", "ForwardDiff"]
@@ -897,20 +845,23 @@ version = "0.3.5"
 
 [[NetworkOptions]]
 uuid = "ca575930-c2e3-43a9-ace4-1e988b2c1908"
+version = "1.2.0"
 
 [[Ogg_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
-git-tree-sha1 = "7937eda4681660b4d6aeeecc2f7e1c81c8ee4e2f"
+git-tree-sha1 = "887579a3eb005446d514ab7aeac5d1d027658b8f"
 uuid = "e7412a2a-1a6e-54c0-be00-318e2571c051"
-version = "1.3.5+0"
+version = "1.3.5+1"
 
 [[OpenBLAS_jll]]
 deps = ["Artifacts", "CompilerSupportLibraries_jll", "Libdl"]
 uuid = "4536629a-c528-5b80-bd46-f80d51c5b363"
+version = "0.3.20+0"
 
 [[OpenLibm_jll]]
 deps = ["Artifacts", "Libdl"]
 uuid = "05823500-19ac-5b8b-9628-191a04bc5112"
+version = "0.8.1+0"
 
 [[OpenSSL_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -962,6 +913,7 @@ version = "0.40.1+0"
 [[Pkg]]
 deps = ["Artifacts", "Dates", "Downloads", "LibGit2", "Libdl", "Logging", "Markdown", "Printf", "REPL", "Random", "SHA", "Serialization", "TOML", "Tar", "UUIDs", "p7zip_jll"]
 uuid = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
+version = "1.8.0"
 
 [[PlotThemes]]
 deps = ["PlotUtils", "Requires", "Statistics"]
@@ -993,9 +945,9 @@ uuid = "de0858da-6303-5e67-8744-51eddeeeb8d7"
 
 [[Qt5Base_jll]]
 deps = ["Artifacts", "CompilerSupportLibraries_jll", "Fontconfig_jll", "Glib_jll", "JLLWrappers", "Libdl", "Libglvnd_jll", "OpenSSL_jll", "Pkg", "Xorg_libXext_jll", "Xorg_libxcb_jll", "Xorg_xcb_util_image_jll", "Xorg_xcb_util_keysyms_jll", "Xorg_xcb_util_renderutil_jll", "Xorg_xcb_util_wm_jll", "Zlib_jll", "xkbcommon_jll"]
-git-tree-sha1 = "ad368663a5e20dbb8d6dc2fddeefe4dae0781ae8"
+git-tree-sha1 = "0c03844e2231e12fda4d0086fd7cbe4098ee8dc5"
 uuid = "ea2cea3b-5b76-57ae-a6ef-0a8af62496e1"
-version = "5.15.3+0"
+version = "5.15.3+2"
 
 [[REPL]]
 deps = ["InteractiveUtils", "Markdown", "Sockets", "Unicode"]
@@ -1029,6 +981,7 @@ version = "1.1.3"
 
 [[SHA]]
 uuid = "ea8e919c-243c-51af-8825-aaa63cd721ce"
+version = "0.7.0"
 
 [[Scratch]]
 deps = ["Dates"]
@@ -1104,6 +1057,7 @@ version = "0.6.3"
 [[TOML]]
 deps = ["Dates"]
 uuid = "fa267f1f-6049-4f14-aa54-33bafae1ed76"
+version = "1.0.0"
 
 [[TableTraits]]
 deps = ["IteratorInterfaceExtensions"]
@@ -1120,6 +1074,7 @@ version = "1.6.0"
 [[Tar]]
 deps = ["ArgTools", "SHA"]
 uuid = "a4e569a6-e804-4fa4-b0f3-eef7a1d5b13e"
+version = "1.10.1"
 
 [[Test]]
 deps = ["InteractiveUtils", "Logging", "Random", "Serialization"]
@@ -1301,6 +1256,7 @@ version = "1.4.0+3"
 [[Zlib_jll]]
 deps = ["Libdl"]
 uuid = "83775a58-1f1d-513f-b197-d71354ab007a"
+version = "1.2.12+3"
 
 [[Zstd_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -1317,6 +1273,7 @@ version = "0.15.1+0"
 [[libblastrampoline_jll]]
 deps = ["Artifacts", "Libdl", "OpenBLAS_jll"]
 uuid = "8e850b90-86db-534c-a0d3-1478176c7d93"
+version = "5.1.1+0"
 
 [[libfdk_aac_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -1332,17 +1289,19 @@ version = "1.6.38+0"
 
 [[libvorbis_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Ogg_jll", "Pkg"]
-git-tree-sha1 = "c45f4e40e7aafe9d086379e5578947ec8b95a8fb"
+git-tree-sha1 = "b910cb81ef3fe6e78bf6acee440bda86fd6ae00c"
 uuid = "f27f6e37-5d2b-51aa-960f-b287f2bc3b7a"
-version = "1.3.7+0"
+version = "1.3.7+1"
 
 [[nghttp2_jll]]
 deps = ["Artifacts", "Libdl"]
 uuid = "8e850ede-7688-5339-a07c-302acd2aaf8d"
+version = "1.48.0+0"
 
 [[p7zip_jll]]
 deps = ["Artifacts", "Libdl"]
 uuid = "3f19e933-33d8-53b3-aaab-bd5110c3b7a0"
+version = "17.4.0+0"
 
 [[x264_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -1367,9 +1326,6 @@ version = "0.9.1+5"
 # ╟─d61e1ea6-f924-11ea-00dc-794c93177d22
 # ╠═35a850c8-d24c-4593-b551-f3b9bb49e82d
 # ╟─4ae18622-f7ec-11ea-2f71-d5b166ff50fb
-# ╠═88dd8a5e-651a-4939-9231-6696b78f024c
-# ╠═7dccedba-aa05-4821-b1ed-ed873ad9cccb
-# ╠═bea20ce9-88ff-45e4-bb5a-494c4d2d19c2
 # ╟─7dc345ee-f7ec-11ea-138f-a1c6b81e0260
 # ╠═58162516-f7ec-11ea-3095-85bde6d71604
 # ╟─dcf06721-1996-42ce-8c77-93f6f5195c7d
@@ -1392,9 +1348,5 @@ version = "0.9.1+5"
 # ╠═7fafbd51-99a9-4fea-bebf-6160e62a3ef4
 # ╟─a7db5298-bd46-4edf-b34e-27ff7fed5b1e
 # ╟─d764d914-7a16-434a-8954-1f7233ee601c
-# ╟─d4637d80-f8c1-11ea-1f7f-df462373ca2d
-# ╠═91a712b2-f8bd-11ea-3b8c-1bfbd521d29a
-# ╟─e202c9cd-6603-4c73-9a4d-565cf0de7247
-# ╠═580e8356-4fd2-47e1-a5a4-7063998b4ecb
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
