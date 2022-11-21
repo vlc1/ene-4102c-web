@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.16
+# v0.19.14
 
 using Markdown
 using InteractiveUtils
@@ -114,6 +114,20 @@ begin
 	plot!(fig, T, last.(Y), label = "Prédateurs")
 end
 
+# ╔═╡ e0d24615-6d51-4c0c-93c8-612c0ad3c954
+md"""
+4. En suivant les exemples des fonctions `explicit!`, `implicit!` et `midpoint!`, implémenter la méthode des trapèzes (`trapezoidal!`), qui s'écrit
+```math
+u _ {n+1} = u _ n + \frac{\tau}{2} \left [ f \left( t _ n, u _ n \right ) + f \left( t _ n + \tau, u _ {n + 1} \right ) \right ].
+```
+5. Implémenter une nouvelle fonction (`rk2!`) qui correspond à la méthode explicite de Runge-Kutta d'ordre 2
+```math
+u _ {n+1} = u _ n + \tau f \left( t _ n + \frac{\tau}{2}, u _ n + \frac{\tau}{2} f \left( t _ n, u _ n \right) \right).
+```
+6. Les méthodes du point milieu, des trapèzes et de Runge-Kutta précédente sont toutes d'ordre 2. Observer en quoi la solution varie entre ces schémas et en faisant varier le pas en temps.
+
+"""
+
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
@@ -130,7 +144,7 @@ Plots = "~1.24.3"
 PLUTO_MANIFEST_TOML_CONTENTS = """
 # This file is machine-generated - editing it directly is not advised
 
-julia_version = "1.8.3"
+julia_version = "1.8.2"
 manifest_format = "2.0"
 project_hash = "d2dfdae085dd52d09c72516be0d3b84b7aedccf6"
 
@@ -1125,5 +1139,6 @@ version = "0.9.1+5"
 # ╟─77343961-9f9f-4f51-a6cc-88c31cd68203
 # ╟─08fc9e11-ec90-4521-b305-08d2bbeb83cd
 # ╠═ad08bb68-0e9e-4a39-b84a-ed41392dd425
+# ╟─e0d24615-6d51-4c0c-93c8-612c0ad3c954
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
