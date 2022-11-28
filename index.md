@@ -3,13 +3,23 @@ title: Méthodes numériques pour l'Énergétique et la Thermique
 author: Vincent Le Chenadec
 ---
 
+# CM
+
 Les documents présentés en cours sont disponible [ici](https://drive.google.com/drive/folders/19xR_Mkr8l-vc431Vd6tm2Z3tX-jpG35t?usp=share_link).
 
-# TD 1 (22/11/2022)
+## CM 1 (27/11/2022)
+
+Le *notebook* réalisé en cours est disponible [ici](notebook/cours-3.html).
+
+# TD
+
+## TD 1 (22/11/2022)
 
 [Feuille d'exercice](exercices/td1.pdf).
 
-# TP 1 (22/11/2022)
+# TP
+
+## TP 1 (22/11/2022)
 
 Pour celles ou ceux qui souhaite participer à distance, merci de bien vouloir utiliser la réunion Zoom référencée ci-dessous:
 
