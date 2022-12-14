@@ -7,15 +7,19 @@ author: Vincent Le Chenadec
 
 Les documents présentés en cours sont disponible [ici](https://drive.google.com/drive/folders/19xR_Mkr8l-vc431Vd6tm2Z3tX-jpG35t?usp=share_link).
 
-## CM 1 (27/11/2022)
+## CM du 27/11/2022
 
 Le *notebook* réalisé en cours est disponible [ici](notebook/cours-3.html).
 
 # TD
 
-## TD 1 (22/11/2022)
+## TD du 22/11/2022
 
 [Feuille d'exercice](exercices/td1.pdf).
+
+## TD du 14/12/2022
+
+[Notebook](notebook/assembly.html) sur l'assemblage de matrices pour la résolution de l'équation de la conduction en régime stationnaire.
 
 # TP
 
