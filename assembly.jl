@@ -22,7 +22,7 @@ function bc(n, ::Type{T}=Int) where {T}
 end
 
 # ╔═╡ 915e8d10-8b0e-4664-99f0-f215a4ae2cba
-n = (128, 128)
+n = (8, 8)
 
 # ╔═╡ e2e1f928-9d74-4ee8-9d46-21e68b89a396
 Δ = derivative.(n)
