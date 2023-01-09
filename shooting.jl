@@ -80,8 +80,8 @@ Implémenter ce modèle dans la fonction `source` ci-dessous.
 # Question 1
 function source(x, q)
 	res = similar(q)
-	res[1] = q[2]
-	res[2] = sin(π * x)
+	res[1] = 0
+	res[2] = 0
 	return res
 end
 
