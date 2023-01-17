@@ -44,3 +44,10 @@ Les *notebooks* sont disponibles aux liens ci-dessous :
 - [Méthode de tir](notebook/shooting.html) ;
 - [Méthode des différences finies](notebook/fdm.html).
 
+## TP 3 (17/01/2023)
+
+On reprendra le dernier *notebook* de la séance précédente pour commencer, et on terminera par son extension à deux dimensions.
+
+- [Méthode des différences finies](notebook/fdm.html) ;
+- [Extension en dimension 2](notebook/poisson.html).
+
